@@ -7,8 +7,8 @@ from torchvision.utils import save_image
 import os
 
 # 创建文件夹
-if not os.path.exists('./img_AE'):
-    os.mkdir('./img_AE')
+if not os.path.exists('./AE/img_AE'):
+    os.mkdir('./AE/img_AE')
 # GPU
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 batch_size = 128
@@ -87,9 +87,9 @@ for epoch in range(num_epoch):  # 进行多个epoch的训练
             ))
         if epoch == 0:
             real_images = img.cpu().data.clamp(0,1)
-            save_image(real_images, './img_AE/real_images.png')
+            save_image(real_images, './AE/img_AE/real_images.png')
         if i==len(dataloader)-1:
             fake_images = recon_img.cpu().data.clamp(0,1)
-            save_image(fake_images, './img_AE/fake_images-{}.png'.format(epoch + 1))
+            save_image(fake_images, './AE/img_AE/fake_images-{}.png'.format(epoch + 1))
 # 保存模型
-torch.save(AE.state_dict(), './AE_z2.pth')
+torch.save(AE.state_dict(), './AE/AE_z2.pth')

@@ -4,6 +4,8 @@ import torch.nn as nn
 from torchvision import transforms
 from torchvision import datasets
 import matplotlib.pyplot as plt
+
+import matplotlib.pyplot as plt
 import os
 from torchvision.utils import make_grid
 
@@ -61,7 +63,7 @@ class autoencoder(nn.Module):
 
 # 创建AE对象
 AE = autoencoder().to(device)
-AE.load_state_dict(torch.load('./AE_z2.pth'))
+AE.load_state_dict(torch.load('./AE/AE_z2.pth'))
 # 是单目标二分类交叉熵函数
 criterion = nn.BCELoss()
 ae_optimizer = torch.optim.Adam(AE.parameters(), lr=0.0003)
@@ -106,4 +108,5 @@ def plot_numbers(rangex,rangey):
     img = make_grid(numbers,nrow=len(x),normalize=True).detach().numpy()
     plt.imshow(np.transpose(img, (1,2,0)), interpolation='nearest')
     plt.show()
+    print()
 plot_numbers([-2,2],[-2,2])

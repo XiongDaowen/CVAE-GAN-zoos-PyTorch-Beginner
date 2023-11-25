@@ -7,8 +7,8 @@ from torchvision.utils import save_image
 import os
 
 # 创建文件夹
-if not os.path.exists('./img_DAE'):
-    os.mkdir('./img_DAE')
+if not os.path.exists('./DAE/img_DAE'):
+    os.mkdir('./DAE/img_DAE')
 # GPU
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -25,7 +25,7 @@ z_dimension = 2
 img_transform = transforms.Compose([
     transforms.ToTensor(),
     # transforms.Lambda(lambda x: x.repeat(3,1,1)),
-    transforms.Normalize(mean=[0.5], std=[0.5])
+    # transforms.Normalize(mean=[0.5], std=[0.5])
 ])
 
 # mnist dataset mnist数据集下载
@@ -77,7 +77,7 @@ class autoencoder(nn.Module):
 
 # 创建对象
 AE = autoencoder().to(device)
-AE.load_state_dict(torch.load('./DAE_z2.pth'))
+AE.load_state_dict(torch.load('./DAE/DAE_z2.pth'))
 criterion = nn.BCELoss()  # 是单目标二分类交叉熵函数
 ae_optimizer = torch.optim.Adam(AE.parameters(), lr=0.0003)
 ###########################进入训练##判别器的判断过程#####################
@@ -87,7 +87,7 @@ for epoch in range(num_epoch):  # 进行多个epoch的训练
         # view()函数作用把img变成[batch_size,channel_size,784]
         img = img.view(num_img,  1,28,28).to(device)  # 将图片展开为28*28=784
         noise = torch.rand(img.shape).to(device)
-        img = img+noise*0.1
+        img = to_img(img+noise*0.1)
         code,decode = AE(img)  # 将真实图片放入判别器中
         loss=criterion(decode,img)
         ae_optimizer.zero_grad()  # 在反向传播之前，先将梯度归0
@@ -106,4 +106,4 @@ for epoch in range(num_epoch):  # 进行多个epoch的训练
         # fake_images = to_img(decode.cpu().data)
         # save_image(fake_images, './img_DAE/fake_images-{}.png'.format(epoch + 1))
 # 保存模型
-torch.save(AE.state_dict(), './DAE_z2.pth')
+torch.save(AE.state_dict(), './DAE/DAE_z2.pth')

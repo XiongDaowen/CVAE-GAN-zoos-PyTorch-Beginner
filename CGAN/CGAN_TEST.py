@@ -43,7 +43,7 @@ class generator(nn.Module):
 # 创建对象
 G = generator()
 G = G.to(device)
-G.load_state_dict(torch.load('./generator_CGAN_z100.pth'))
+G.load_state_dict(torch.load('./CGAN/generator_CGAN_z100.pth'))
 #########判别器训练train#####################
 outputs = []
 for num in range(10):

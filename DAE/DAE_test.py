@@ -8,7 +8,7 @@ from torchvision.utils import save_image
 import os
 from torchvision.utils import make_grid
 # GPU
-device='cpu'
+device='cuda' if torch.cuda.is_available() else 'cpu'
 def to_img(x):
     # out = 0.5 * (x+0.5)
     out = x.clamp(0, 1)  # Clamp函数可以将随机变化的数值限制在一个给定的区间[min, max]内：
@@ -22,7 +22,7 @@ z_dimension = 2
 img_transform = transforms.Compose([
     transforms.ToTensor(),
     # transforms.Lambda(lambda x: x.repeat(3,1,1)),
-    transforms.Normalize(mean=[0.5], std=[0.5])
+    # transforms.Normalize(mean=[0.5], std=[0.5])
 ])
 
 # mnist dataset mnist数据集下载
@@ -74,7 +74,7 @@ class autoencoder(nn.Module):
 
 # 创建对象
 AE = autoencoder().to(device)
-AE.load_state_dict(torch.load('./DAE_z2.pth'))
+AE.load_state_dict(torch.load('./DAE/DAE_z2.pth'))
 criterion = nn.BCELoss()  # 是单目标二分类交叉熵函数
 ae_optimizer = torch.optim.Adam(AE.parameters(), lr=0.0003)
 pos = []
@@ -86,7 +86,7 @@ for epoch in range(num_epoch):  # 进行多个epoch的训练
         # view()函数作用把img变成[batch_size,channel_size,784]
         img = img.view(num_img,  1,28,28).to(device)  # 将图片展开为28*28=784
         noise = torch.rand(img.shape).to(device)
-        img = img+0.1*noise
+        img = to_img(img+0.1*noise)
         code,decode = AE(img)  # 将真实图片放入判别器中
         pos.append(code)
         label.append(lab)
@@ -98,8 +98,8 @@ print(pos.shape)
 print(label.shape)
 for i in range(10):
     plt.scatter(
-        pos[label==i][:,0].detach().numpy(),
-        pos[label==i][:,1].detach().numpy(),
+        pos[label==i][:,0].detach().cpu().numpy(),
+        pos[label==i][:,1].detach().cpu().numpy(),
         alpha=0.5,
         label=i)
 plt.title('DAE-MNIST')
@@ -113,12 +113,13 @@ def plot_numbers(rangex,rangey):
     for xx in x:
         for yy in y:
             z = torch.Tensor([[xx, yy]])
-            out = AE.decoder_fc(z)
+            out = AE.decoder_fc(z.to(device))
             out = out.view(out.shape[0], 16, 7, 7)
             decode = AE.decoder(out)
             numbers.append(decode)
     numbers = torch.cat(numbers)
-    img = make_grid(numbers,nrow=len(x),normalize=True).detach().numpy()
+    img = make_grid(numbers,nrow=len(x),normalize=True).detach().cpu().numpy()
     plt.imshow(np.transpose(img, (1,2,0)), interpolation='nearest')
     plt.show()
 plot_numbers([0,1],[0,1])
+print()

@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 import os
 from torchvision.utils import make_grid
 # 创建文件夹
-if not os.path.exists('./img_VAE'):
-    os.mkdir('./img_VAE')
+if not os.path.exists('./VAE/img_VAE'):
+    os.mkdir('./VAE/img_VAE')
 # GPU
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -107,11 +107,11 @@ for epoch in range(num_epoch):  # 进行多个epoch的训练
 
         if epoch == 0:
             real_images = make_grid(img.cpu(), nrow=8, normalize=True).detach()
-            save_image(real_images, './img_VAE/real_images.png')
+            save_image(real_images, './VAE/img_VAE/real_images.png')
         sample = torch.randn(64,z_dimension).to(device)
         output = vae.decoder_fc(sample)
         output = vae.decoder(output.view(output.shape[0],32,7,7))
         fake_images = make_grid(x.cpu(), nrow=8, normalize=True).detach()
-        save_image(fake_images, './img_VAE/fake_images-{}.png'.format(epoch + 16))
+        save_image(fake_images, './VAE/img_VAE/fake_images-{}.png'.format(epoch + 16))
 # 保存模型
-torch.save(vae.state_dict(), './VAE_z2.pth')
+torch.save(vae.state_dict(), '.VAE/VAE_z2.pth')

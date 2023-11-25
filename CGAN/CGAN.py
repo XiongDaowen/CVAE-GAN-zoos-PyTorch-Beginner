@@ -7,8 +7,8 @@ from torchvision.utils import save_image
 import os
 
 # 创建文件夹
-if not os.path.exists('./img_CGAN'):
-    os.mkdir('./img_CGAN')
+if not os.path.exists('./CGAN/img_CGAN'):
+    os.mkdir('./CGAN/img_CGAN')
 # GPU
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 batch_size = 128
@@ -116,11 +116,11 @@ for epoch in range(num_epoch):  # 进行多个epoch的训练
         # except BaseException as e:
         #     pass
         if epoch == 0:
-            real_images = real_img.cpu().clamp(0,1).view(-1,1,28,28).data
-            save_image(real_images, './img_CGAN/real_images.png')
+            real_images = real_img.cpu().clamp(0,1).view(-1,1,28,28).data # clamp()函数用于将张量的所有元素限制在给定的范围[min, max]内
+            save_image(real_images, './CGAN/img_CGAN/real_images.png')
         if i == len(dataloader)-1:
             fake_images = fake_img.cpu().clamp(0,1).view(-1,1,28,28).data
-            save_image(fake_images, './img_CGAN/fake_images-{}.png'.format(epoch + 1))
+            save_image(fake_images, './CGAN/img_CGAN/fake_images-{}.png'.format(epoch + 1))
 # 保存模型
-torch.save(G.state_dict(), './generator_CGAN_z100.pth')
-torch.save(D.state_dict(), './discriminator_CGAN_z100.pth')
+torch.save(G.state_dict(), './CGAN/generator_CGAN_z100.pth')
+torch.save(D.state_dict(), './CGAN/discriminator_CGAN_z100.pth')
