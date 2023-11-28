@@ -160,5 +160,4 @@ cython_debug/
 #.idea/
 data
 img*
-
-DAE_z2.pth
+*.pth

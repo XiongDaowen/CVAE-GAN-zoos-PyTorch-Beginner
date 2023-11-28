@@ -7,8 +7,8 @@ from torchvision.utils import save_image
 import os
 
 # 创建文件夹
-if not os.path.exists('./img_WDCGAN'):
-    os.mkdir('./img_WDCGAN')
+if not os.path.exists('./WGAN/img_WDCGAN'):
+    os.mkdir('./WGAN/img_WDCGAN')
 # GPU
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 def to_img(x):
@@ -17,7 +17,7 @@ def to_img(x):
     out = out.view(-1, 1, 28, 28)  # view()函数作用是将一个多行的Tensor,拼接成一行
     return out
 
-batch_size = 128
+batch_size = 1024
 num_epoch = 25
 z_dimension = 100
 c=0.005
@@ -177,10 +177,10 @@ for epoch in range(num_epoch):  # 进行多个epoch的训练
 
         if epoch == 0:
             real_images = to_img(real_img.cpu().data)
-            save_image(real_images, './img_WDCGAN/real_images.png')
+            save_image(real_images, './WGAN/img_WDCGAN/real_images.png')
 
         fake_images = to_img(fake_img.cpu().data)
-        save_image(fake_images, './img_WDCGAN/fake_images-{}.png'.format(epoch + 1))
+        save_image(fake_images, './WGAN/img_WDCGAN/fake_images-{}.png'.format(epoch + 1))
 # 保存模型
-torch.save(G.state_dict(), './generator_WDCGAN.pth')
-torch.save(D.state_dict(), './discriminator_WDCGAN.pth')
+torch.save(G.state_dict(), './WGAN/generator_WDCGAN.pth')
+torch.save(D.state_dict(), './WGAN/discriminator_WDCGAN.pth')

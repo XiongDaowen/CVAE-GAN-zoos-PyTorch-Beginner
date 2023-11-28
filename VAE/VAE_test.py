@@ -77,7 +77,7 @@ class VAE(nn.Module):
 
 # 创建对象
 vae = VAE().to(device)
-vae.load_state_dict(torch.load('./VAE_z2.pth'))
+vae.load_state_dict(torch.load('./VAE/VAE_z2.pth'))
 pos = []
 label = []
 ###########################进入训练##判别器的判断过程#####################
@@ -87,7 +87,7 @@ for epoch in range(num_epoch):  # 进行多个epoch的训练
         # view()函数作用把img变成[batch_size,channel_size,784]
         img = img.view(num_img,  1,28,28).to(device)  # 将图片展开为28*28=784
         noise = torch.rand(img.shape).to(device)
-        img = img+0.1*noise
+        #img = img+0.1*noise
         x,mean,logstd = vae(img)  # 将真实图片放入判别器中
         pos.append(mean)
         label.append(lab)
@@ -105,12 +105,12 @@ for i in range(10):
         label=i)
 plt.title('VAE-MNIST')
 plt.legend()
-plt.show()
+# plt.show()
 import numpy as np
 def plot_numbers(rangex,rangey):
     numbers = []
-    x = torch.arange(rangex[0],rangex[1],0.5)
-    y = torch.arange(rangey[0],rangey[1],0.5)
+    x = torch.arange(rangex[0],rangex[1],0.2)
+    y = torch.arange(rangey[0],rangey[1],0.2)
     for xx in x:
         for yy in y:
             z = torch.Tensor([[xx, yy]])
@@ -122,4 +122,4 @@ def plot_numbers(rangex,rangey):
     img = make_grid(numbers,nrow=len(x),normalize=True).detach().numpy()
     plt.imshow(np.transpose(img, (1,2,0)), interpolation='nearest')
     plt.show()
-plot_numbers([-3,3],[-3,3])
+plot_numbers([-5,5],[-5,5])

@@ -7,8 +7,8 @@ from torchvision.utils import save_image
 import os
 
 # 创建文件夹
-if not os.path.exists('./img_WGANGP'):
-    os.mkdir('./img_WGANGP')
+if not os.path.exists('./WGAN-GP/img_WGANGP'):
+    os.mkdir('./WGAN-GP/img_WGANGP')
 # GPU
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 def to_img(x):
@@ -166,10 +166,10 @@ for epoch in range(num_epoch):  # 进行多个epoch的训练
 
         if epoch == 0:
             real_images = to_img(real_img.cpu().data)
-            save_image(real_images, './img_WGANGP/real_images.png')
+            save_image(real_images, './WGAN-GP/img_WGANGP/real_images.png')
 
         fake_images = to_img(fake_img.cpu().data)
-        save_image(fake_images, './img_WGANGP/fake_images-{}.png'.format(epoch + 1))
+        save_image(fake_images, './WGAN-GP/img_WGANGP/fake_images-{}.png'.format(epoch + 1))
 # 保存模型
-torch.save(G.state_dict(), './generator_WGANGP.pth')
-torch.save(D.state_dict(), './discriminator_WGANGP.pth')
+torch.save(G.state_dict(), './WGAN-GP/generator_WGANGP.pth')
+torch.save(D.state_dict(), './WGAN-GP/discriminator_WGANGP.pth')

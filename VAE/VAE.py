@@ -114,4 +114,4 @@ for epoch in range(num_epoch):  # 进行多个epoch的训练
         fake_images = make_grid(x.cpu(), nrow=8, normalize=True).detach()
         save_image(fake_images, './VAE/img_VAE/fake_images-{}.png'.format(epoch + 16))
 # 保存模型
-torch.save(vae.state_dict(), '.VAE/VAE_z2.pth')
+torch.save(vae.state_dict(), './VAE/VAE_z2.pth')

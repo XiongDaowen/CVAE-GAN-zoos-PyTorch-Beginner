@@ -90,14 +90,14 @@ def loss_function(recon_x,x,mean,logstd):
     return MSE+KLD
 
 if __name__ == '__main__':
-    dataset = 'cifar10'
+    # dataset = 'cifar10'
     dataset = 'mnist'
     batchSize = 128
     imageSize = 28
     nz=100
     nepoch=20
-    if not os.path.exists('./img_CVAE-GAN'):
-        os.mkdir('./img_CVAE-GAN')
+    if not os.path.exists('./CVAE-GAN/img_CVAE-GAN'):
+        os.mkdir('./CVAE-GAN/img_CVAE-GAN')
     print("Random Seed: 88")
     random.seed(88)
     torch.manual_seed(88)
@@ -116,13 +116,13 @@ if __name__ == '__main__':
 
     print("=====> 构建VAE")
     vae = VAE().to(device)
-    vae.load_state_dict(torch.load('./CVAE-GAN-VAE.pth'))
+    # vae.load_state_dict(torch.load('./CVAE-GAN/CVAE-GAN-VAE.pth'))
     print("=====> 构建D")
     D = Discriminator(1).to(device)
-    D.load_state_dict(torch.load('./CVAE-GAN-Discriminator.pth'))
+    # D.load_state_dict(torch.load('./CVAE-GAN/CVAE-GAN-Discriminator.pth'))
     print("=====> 构建C")
     C = Discriminator(10).to(device)
-    C.load_state_dict(torch.load('./CVAE-GAN-Classifier.pth'))
+    # C.load_state_dict(torch.load('./CVAE-GAN/CVAE-GAN-Classifier.pth'))
     criterion = nn.BCELoss().to(device)
     MSECriterion = nn.MSELoss().to(device)
 
@@ -184,17 +184,17 @@ if __name__ == '__main__':
                          errD.item(),errC.item(),vae_loss.item()))
             if epoch==0:
                 real_images = make_grid(data.cpu(), nrow=8, normalize=True).detach()
-                save_image(real_images, './img_CVAE-GAN/real_images.png')
+                save_image(real_images, './CVAE-GAN/img_CVAE-GAN/real_images.png')
             if i == len(dataloader)-1:
                 sample = torch.randn(data.shape[0], nz).to(device)
                 print(label)
                 sample = torch.cat([sample,real_label],1)
                 output = vae.decoder(sample)
                 fake_images = make_grid(output.cpu(), nrow=8, normalize=True).detach()
-                save_image(fake_images, './img_CVAE-GAN/fake_images-{}.png'.format(epoch + 26))
-torch.save(vae.state_dict(), './CVAE-GAN-VAE.pth')
-torch.save(D.state_dict(),'./CVAE-GAN-Discriminator.pth')
-torch.save(C.state_dict(),'./CVAE-GAN-Classifier.pth')
+                save_image(fake_images, './CVAE-GAN/img_CVAE-GAN/fake_images-{}.png'.format(epoch + 26))
+torch.save(vae.state_dict(), './CVAE-GAN/CVAE-GAN-VAE.pth')
+torch.save(D.state_dict(),'./CVAE-GAN/CVAE-GAN-Discriminator.pth')
+torch.save(C.state_dict(),'./CVAE-GAN/CVAE-GAN-Classifier.pth')
 
 
 

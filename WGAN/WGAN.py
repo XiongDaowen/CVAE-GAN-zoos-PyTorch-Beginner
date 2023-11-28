@@ -7,8 +7,8 @@ from torchvision.utils import save_image
 import os
 
 # 创建文件夹
-if not os.path.exists('./img_WGAN'):
-    os.mkdir('./img_WGAN')
+if not os.path.exists('./WGAN/img_WGAN'):
+    os.mkdir('./WGAN/img_WGAN')
 # GPU
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -26,7 +26,7 @@ c = 0.005
 img_transform = transforms.Compose([
     transforms.ToTensor(),
     # transforms.Lambda(lambda x: x.repeat(3,1,1)),
-    transforms.Normalize(mean=[0.5], std=[0.5])
+    # transforms.Normalize(mean=[0.5], std=[0.5])
 ])
 
 # mnist dataset mnist数据集下载
@@ -85,8 +85,8 @@ class generator(nn.Module):
 # 创建对象
 D = discriminator()
 G = generator()
-G.load_state_dict(torch.load('./generator_WGAN.pth'))
-D.load_state_dict(torch.load('./discriminator_WGAN.pth'))
+# G.load_state_dict(torch.load('./WGAN/generator_WGAN.pth'))
+# D.load_state_dict(torch.load('./WGAN/discriminator_WGAN.pth'))
 D = D.to(device)
 G = G.to(device)
 
@@ -167,10 +167,10 @@ for epoch in range(num_epoch):  # 进行多个epoch的训练
 
         if epoch == 0:
             real_images = to_img(real_img.cpu().data)
-            save_image(real_images, './img_WGAN/real_images.png')
+            save_image(real_images, './WGAN/img_WGAN/real_images.png')
 
         fake_images = to_img(fake_img.cpu().data)
-        save_image(fake_images, './img_WGAN/fake_images-{}.png'.format(epoch + 501))
+        save_image(fake_images, './WGAN/img_WGAN/fake_images-{}.png'.format(epoch + 501))
 # 保存模型
-torch.save(G.state_dict(), './generator_WGAN.pth')
-torch.save(D.state_dict(), './discriminator_WGAN.pth')
+torch.save(G.state_dict(), './WGAN/generator_WGAN.pth')
+torch.save(D.state_dict(), './WGAN/discriminator_WGAN.pth')
